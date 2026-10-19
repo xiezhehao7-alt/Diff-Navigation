@@ -1,0 +1,14 @@
+name: Diff-Navigation CI
+on:
+  push:
+    branches: [ "dev" ]
+jobs:
+  build-and-init:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+    - name: Build Docker Image
+      run: docker build -t diff-nav-test:latest -f tests_auto/Dockerfile .
+    - name: Run Tests
+      run: docker run --rm diff-nav-test:latest
