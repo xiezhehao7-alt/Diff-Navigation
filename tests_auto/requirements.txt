@@ -1,4 +1,3 @@
 pytest==7.4.3
 requests==2.31.0
 numpy==1.24.3
-rosbag==1.15.15
