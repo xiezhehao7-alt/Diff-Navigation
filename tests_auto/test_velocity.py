@@ -2,15 +2,6 @@ import pytest
 import numpy as np
 
 def test_velocity_tracking():
-
-
-
-
-cat > tests_auto/test_velocity.py << 'EOF'
-import pytest
-import numpy as np
-
-def test_velocity_tracking():
     """测试速度跟踪 RMSE 计算"""
     expected_vel = np.array([1.0, 0.0, 0.0])
     actual_vel = np.array([0.95, 0.05, 0.0])
