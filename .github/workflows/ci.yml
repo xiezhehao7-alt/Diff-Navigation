@@ -12,5 +12,12 @@ jobs:
       run: docker build -t diff-nav-test:latest -f tests_auto/Dockerfile .
     - name: 编译 ROS 工作空间
       run: docker run --rm diff-nav-test:latest /bin/bash -c "source /opt/ros/noetic/setup.bash && catkin_make"
-    - name: 运行核心业务测试 (pytest)
-      run: docker run --rm diff-nav-test:latest /bin/bash -c "source /opt/ros/noetic/setup.bash && pytest /workspace/tests_auto/ -v"
+    - name: 运行核心业务测试并生成 HTML 报告
+      # 这里加了 --html 参数，并将容器内的 reports 目录映射到外部
+      run: docker run --rm -v ${{ github.workspace }}/reports:/workspace/tests_auto/reports diff-nav-test:latest /bin/bash -c "source /opt/ros/noetic/setup.bash && pytest /workspace/tests_auto/ --html=/workspace/tests_auto/reports/report.html --self-contained-html -v"
+    - name: 归档测试报告与图表
+      uses: actions/upload-artifact@v4
+      if: always()  # 无论测试成功还是失败，都导出报告
+      with:
+        name: CI-Test-Reports
+        path: reports/
