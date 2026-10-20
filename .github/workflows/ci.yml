@@ -3,12 +3,14 @@ on:
   push:
     branches: [ "dev" ]
 jobs:
-  build-and-init:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Code
+    - name: 检出仓库代码
       uses: actions/checkout@v4
-    - name: Build Docker Image
+    - name: 构建测试环境镜像
       run: docker build -t diff-nav-test:latest -f tests_auto/Dockerfile .
-    - name: Run Tests
-      run: docker run --rm diff-nav-test:latest
+    - name: 编译 ROS 工作空间
+      run: docker run --rm diff-nav-test:latest /bin/bash -c "source /opt/ros/noetic/setup.bash && catkin_make"
+    - name: 运行核心业务测试 (pytest)
+      run: docker run --rm diff-nav-test:latest /bin/bash -c "source /opt/ros/noetic/setup.bash && pytest /workspace/tests_auto/ -v"
